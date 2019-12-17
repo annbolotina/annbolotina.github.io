@@ -338,11 +338,11 @@ class GEq f where
     geq :: (a → a → Bool) → f a → f a → Bool
 
 instance GEq U where
-    geq _ U U = True
+    geq _   U     U     = True
 instance Eq a ⇒ GEq (K a) where
-    geq _ (K  x) (K  y) = x == y
+    geq _   (K x) (K y) = x == y
 instance GEq I where
-    geq eqf (I   x) (I   y) = eqf x y
+    geq eqf (I x) (I y) = eqf x y
 instance (GEq f, GEq g) ⇒ GEq (f :+: g) where
     geq eqf (L x) (L y) = geq eqf x y
     geq eqf (R x) (R y) = geq eqf x y
@@ -453,16 +453,16 @@ czipWith_NP :: (All c xs, SingI xs)
 _Non-working example:_ Recursive subterms
 
 ```haskell
-subterms :: Generic a ⇒ a → [a]
-subterms = subtermsNS ∘ from
+rsubterms :: Generic a ⇒ a → [a]
+rsubterms = rsubtermsNS ∘ from
 
-subtermsNS :: NS (NP I) xss → [a]
-subtermsNS (S ns) = subtermsNS ns
-subtermsNS (Z np) = subtermsNP np
+rsubtermsNS :: NS (NP I) xss → [a]
+rsubtermsNS (S ns) = rsubtermsNS ns
+rsubtermsNS (Z np) = rsubtermsNP np
 
-subtermsNP :: NP I xs → [a]
-subtermsNP (I y :∗ ys) = ?   -- The result depends on the type of y
-subtermsNP Nil = []
+rsubtermsNP :: NP I xs → [a]
+rsubtermsNP (I y :∗ ys) = ?   -- The result depends on the type of y
+rsubtermsNP Nil = []
 ```
 
 ---
@@ -474,18 +474,18 @@ count: false
 _Non-working example:_ Recursive subterms
 
 ```haskell
-subterms :: Generic a ⇒ a → [a]
-subterms = subtermsNS ∘ from
+rsubterms :: Generic a ⇒ a → [a]
+rsubterms = rsubtermsNS ∘ from
 
-subtermsNS :: NS (NP I) xss → [a]
-subtermsNS (S ns) = subtermsNS ns
-subtermsNS (Z np) = subtermsNP np
+rsubtermsNS :: NS (NP I) xss → [a]
+rsubtermsNS (S ns) = rsubtermsNS ns
+rsubtermsNS (Z np) = rsubtermsNP np
 
-subtermsNP :: ∀a xs. NP I xs → [a]
-subtermsNP (I y :∗ ys)
-    | typeOf @a y = castEq y : subtermsNP ys
-    | otherwise   = subtermsNP ys
-subtermsNP Nil = []
+rsubtermsNP :: ∀a xs. NP I xs → [a]
+rsubtermsNP (I y :∗ ys)
+    | typeOf @a y = castEq y : rsubtermsNP ys
+    | otherwise   = rsubtermsNP ys
+rsubtermsNP Nil = []
 ```
 
 ---
